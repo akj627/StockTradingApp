@@ -83,6 +83,25 @@ AUTH_PROVIDER=username     # only option today; "cognito" will be added later
 | `/stocks` | GET | Current list of the 10 tickers with current prices |
 | `/stream/prices` | GET (SSE) | Live-updating price stream, one event/second |
 
+## Built step by step, with Claude
+
+This project is being built incrementally using [Claude Code](https://claude.com/claude-code) —
+deliberately as a series of small, fully-explained steps rather than one
+generated codebase, so each concept could be understood before moving on.
+Every step below was run and verified (via `curl`, a terminal script, or a
+browser) before moving to the next.
+
+| Step | What was built | Concept learned |
+|---|---|---|
+| 1 | Backend skeleton — a FastAPI app with one `/health` route, run via a Python virtual environment and `uvicorn` | How a Python web server actually boots: venv isolation, the FastAPI app object, and a dev server that listens on a port |
+| 2 | Ticker data model + `/stocks` endpoint | Pydantic models as a data "contract"; how FastAPI auto-converts typed Python objects to JSON |
+| 3 | Simulated price engine (`PriceProvider` interface + `SimulatedPriceProvider`) | Abstract base classes as a swap-in-later seam; a random-walk simulation for realistic-looking price drift |
+| 4 | `/stream/prices` SSE endpoint + config-driven provider selection | Async generators (`yield` instead of `return`) for a long-lived connection; the raw SSE wire format (`data: ...\n\n`); picking an implementation from a config value |
+| 5 | React + TypeScript dashboard consuming the stream | Vite project scaffolding; the browser's built-in `EventSource` API; why cross-origin requests need CORS; React state/`useEffect` re-rendering on each server push |
+
+Next up (see [Roadmap](#roadmap)): username-only login, then buy/sell orders
+and a portfolio view — each will get the same step-by-step treatment.
+
 ## Roadmap
 
 Built so far:
